@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const c = require('../controllers/consultasController');
+const { autenticar, autorizar } = require('../middlewares/auth');
+router.use(autenticar, autorizar('administrador','recepcionista','veterinario'));
+router.get('/', c.listar);
+router.post('/', autorizar('administrador','recepcionista'), c.criar);
+router.put('/:id', autorizar('administrador','recepcionista'), c.atualizar);
+router.delete('/:id', autorizar('administrador','recepcionista'), c.excluir);
+router.get('/:id/registro-clinico', autorizar('administrador','veterinario'), c.obterRegistro);
+router.post('/:id/registro-clinico', autorizar('administrador','veterinario'), c.salvarRegistro);
+module.exports = router;

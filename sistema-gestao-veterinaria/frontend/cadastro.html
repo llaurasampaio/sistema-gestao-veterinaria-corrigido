@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Criar conta | VetCare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/cadastro.js" defer></script>
+</head>
+
+<body>
+    <header><a class="brand" href="index.html">VetCare</a>
+        <nav><a href="login.html">Entrar</a></nav>
+    </header>
+    <main class="login panel">
+        <p class="eyebrow">Primeiro acesso</p>
+        <h1>Criar conta</h1>
+        <p class="small">Crie a primeira conta de administrador. Depois, o administrador poderá cadastrar recepcionistas e veterinários pela rota administrativa da API.</p>
+        <form id="register-form">
+            <div class="field"><label for="nome">Nome completo</label><input id="nome" required></div>
+            <div class="field"><label for="email">E-mail</label><input id="email" type="email" required></div>
+            <div class="field"><label for="senha">Senha (mínimo 8 caracteres)</label><input id="senha" type="password"
+                    minlength="8" required></div>
+            <div class="field"><input type="hidden" id="perfil" value="administrador"></div>
+            <div class="actions"><button type="submit">Cadastrar</button></div>
+            <p id="message" class="message" role="status"></p>
+        </form>
+    </main>
+</body>
+
+</html>

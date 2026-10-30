@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Consultas | VetCare</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/common.js" defer></script>
+    <script src="js/consultas.js" defer></script>
+</head>
+<body>
+    <header>
+        <a class="brand" href="dashboard.html">VetCare</a>
+        <nav>
+            <a href="dashboard.html">Painel</a>
+            <a href="animais.html">Animais</a>
+            <a href="tutores.html" data-roles="administrador,recepcionista">Tutores</a>
+            <a href="#" data-logout>Sair</a>
+        </nav>
+    </header>
+    <main>
+        <section class="panel">
+            <p class="eyebrow">Agenda</p>
+            <h1>Consultas</h1>
+            <p class="small">Selecione o animal e o veterinário cadastrados para agendar uma consulta.</p>
+            <form id="consulta-form">
+                <input type="hidden" id="consulta-id">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="animal_id">Animal *</label>
+                        <select id="animal_id" required>
+                            <option value="">Carregando animais...</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="veterinario_id">Veterinário *</label>
+                        <select id="veterinario_id" required>
+                            <option value="">Carregando veterinários...</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="data_hora">Data e hora *</label>
+                        <input id="data_hora" type="datetime-local" required>
+                    </div>
+                    <div class="field">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="agendada">Agendada</option>
+                            <option value="confirmada">Confirmada</option>
+                            <option value="realizada">Realizada</option>
+                            <option value="cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="field full">
+                        <label for="motivo">Motivo *</label>
+                        <input id="motivo" required>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="submit" data-roles="administrador,recepcionista,veterinario">Salvar consulta</button>
+                    <button type="button" id="limpar" class="secondary">Limpar</button>
+                </div>
+                <p id="message" class="message" role="status"></p>
+            </form>
+        </section>
+        <section class="panel">
+            <h2>Agenda cadastrada</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Data</th><th>Animal</th><th>Veterinário</th><th>Motivo</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="panel" data-roles="administrador,veterinario">
+            <h2>Registro clínico</h2>
+            <p class="small">Escolha a consulta pelo animal, veterinário e data para salvar ou atualizar o registro clínico.</p>
+            <form id="clinico-form">
+                <div class="field">
+                    <label for="clinico-consulta">Consulta *</label>
+                    <select id="clinico-consulta" required>
+                        <option value="">Carregando consultas...</option>
+                    </select>
+                </div>
+                <div class="field"><label for="descricao">Descrição *</label><textarea id="descricao" required></textarea></div>
+                <div class="field"><label for="diagnostico">Diagnóstico</label><textarea id="diagnostico"></textarea></div>
+                <div class="field"><label for="prescricao">Prescrição</label><textarea id="prescricao"></textarea></div>
+                <div class="actions"><button type="submit">Salvar registro</button></div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

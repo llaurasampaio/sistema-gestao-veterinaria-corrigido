@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const c = require('../controllers/animaisController');
+const { autenticar, autorizar } = require('../middlewares/auth');
+router.use(autenticar);
+router.get('/', autorizar('administrador','recepcionista','veterinario'), c.listar);
+router.get('/:id', autorizar('administrador','recepcionista','veterinario'), c.obter);
+router.post('/', autorizar('administrador','recepcionista'), c.criar);
+router.put('/:id', autorizar('administrador','recepcionista'), c.atualizar);
+router.delete('/:id', autorizar('administrador'), c.excluir);
+module.exports = router;

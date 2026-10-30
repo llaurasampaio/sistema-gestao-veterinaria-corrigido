@@ -1,0 +1,79 @@
+CREATE DATABASE IF NOT EXISTS sistema_veterinario
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sistema_veterinario;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255) NOT NULL,
+  perfil ENUM('administrador','recepcionista','veterinario','tutor') NOT NULL,
+  ativo BOOLEAN NOT NULL DEFAULT TRUE,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS tutores (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT UNSIGNED NULL UNIQUE,
+  nome VARCHAR(120) NOT NULL,
+  telefone VARCHAR(30),
+  email VARCHAR(160),
+  endereco VARCHAR(255),
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_tutores_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    ON UPDATE CASCADE ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS veterinarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT UNSIGNED NOT NULL UNIQUE,
+  crmv VARCHAR(40) NULL UNIQUE,
+  especialidade VARCHAR(120),
+  CONSTRAINT fk_veterinarios_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS animais (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  tutor_id INT UNSIGNED NOT NULL,
+  nome VARCHAR(100) NOT NULL,
+  especie VARCHAR(50) NOT NULL,
+  raca VARCHAR(100),
+  sexo ENUM('macho','femea','nao_informado') NOT NULL DEFAULT 'nao_informado',
+  data_nascimento DATE NULL,
+  peso_kg DECIMAL(6,2) NULL,
+  observacoes TEXT,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_animais_tutor FOREIGN KEY (tutor_id) REFERENCES tutores(id)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  INDEX idx_animais_nome (nome)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS consultas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  animal_id INT UNSIGNED NOT NULL,
+  veterinario_id INT UNSIGNED NOT NULL,
+  data_hora DATETIME NOT NULL,
+  motivo VARCHAR(255) NOT NULL,
+  status ENUM('agendada','confirmada','realizada','cancelada') NOT NULL DEFAULT 'agendada',
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_consultas_animal FOREIGN KEY (animal_id) REFERENCES animais(id)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_consultas_veterinario FOREIGN KEY (veterinario_id) REFERENCES veterinarios(id)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  INDEX idx_consultas_data_hora (data_hora),
+  INDEX idx_consultas_status (status)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS registros_clinicos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  consulta_id INT UNSIGNED NOT NULL UNIQUE,
+  descricao TEXT NOT NULL,
+  diagnostico TEXT,
+  prescricao TEXT,
+  criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_registros_consulta FOREIGN KEY (consulta_id) REFERENCES consultas(id)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;

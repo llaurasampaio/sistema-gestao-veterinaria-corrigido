@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',async()=>{if(!requireLogin())return;try{await api('/auth/me');}catch(e){showMessage(e.message,true);}});
